@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#D4A27F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<title>Time Tracker</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#F3EDE4;--card:#FFFFFF;--card-hover:#FBF8F4;
+  --text:#2D2B2A;--text2:#8B8580;--text3:#B5AFA8;
+  --border:#E8E0D6;--border2:#D6CEC4;
+  --accent:#D4A27F;--accent2:#C4956F;
+  --blue:#4A90D9;--blue-light:#E8F0FA;--blue-dark:#3A78BD;
+  --gray:#8B8580;--gray-light:#F0EDEA;--gray-dark:#6B6560;
+  --orange:#E8A94D;--orange-light:#FDF3E0;--orange-dark:#D49A3E;
+  --purple:#9B7ED8;--red:#E07B7B;--yellow:#E8C84D;--green:#6BBF8A;--proj-gray:#A9A4A0;
+  --shadow:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);
+  --shadow2:0 4px 12px rgba(0,0,0,0.08);
+  --radius:12px;--radius2:16px;
+}
+html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
+body{background:var(--bg);color:var(--text);overflow:hidden}
+.app{display:flex;flex-direction:column;height:100%;max-width:480px;margin:0 auto;position:relative}
+header{padding:16px 20px 8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+header h1{font-size:18px;font-weight:600;color:var(--text);letter-spacing:0.5px}
+main{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:0 16px 16px}
+main::-webkit-scrollbar{display:none}
+
+/* Bottom Navigation */
+.bottom-nav{display:flex;background:var(--card);border-top:1px solid var(--border);flex-shrink:0;padding-bottom:env(safe-area-inset-bottom)}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0 8px;border:none;background:none;color:var(--text3);font-size:10px;font-weight:500;cursor:pointer;transition:color .2s}
+.nav-btn.active{color:var(--accent)}
+.nav-btn svg{width:22px;height:22px;transition:all .2s}
+.nav-btn.active svg{transform:scale(1.05)}
+
+/* Pages */
+.page{display:none;animation:fadeIn .25s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== TIMER PAGE ===== */
+.timer-status{text-align:center;padding:20px 0 10px;min-height:80px}
+.timer-status .label{font-size:13px;color:var(--text2);margin-bottom:4px}
+.timer-status .time{font-size:42px;font-weight:300;color:var(--text);font-variant-numeric:tabular-nums;letter-spacing:1px}
+.timer-status .started{font-size:12px;color:var(--text3);margin-top:4px}
+.timer-buttons{display:flex;flex-direction:column;align-items:center;gap:20px;padding:10px 0 20px}
+.timer-btn{width:120px;height:120px;border-radius:50%;border:3px solid transparent;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;box-shadow:var(--shadow2);transition:all .2s;position:relative;overflow:hidden}
+.timer-btn::before{content:'';position:absolute;inset:0;border-radius:50%;opacity:0;transition:opacity .2s}
+.timer-btn:active{transform:scale(0.95)}
+.timer-btn .icon{font-size:28px}
+.timer-btn .name{font-size:13px;font-weight:600;letter-spacing:0.5px}
+
+.timer-btn.research{border-color:var(--blue);color:var(--blue)}
+.timer-btn.research::before{background:var(--blue-light)}
+.timer-btn.research.running{background:var(--blue);color:white;box-shadow:0 0 0 6px rgba(74,144,217,0.2)}
+.timer-btn.research.running::before{opacity:0}
+
+.timer-btn.nonresearch{border-color:var(--gray);color:var(--gray)}
+.timer-btn.nonresearch::before{background:var(--gray-light)}
+.timer-btn.nonresearch.running{background:var(--gray);color:white;box-shadow:0 0 0 6px rgba(139,133,128,0.2)}
+
+.timer-btn.meeting{border-color:var(--orange);color:var(--orange)}
+.timer-btn.meeting::before{background:var(--orange-light)}
+.timer-btn.meeting.running{background:var(--orange);color:white;box-shadow:0 0 0 6px rgba(232,169,77,0.2)}
+
+.timer-btn:not(.running):hover::before{opacity:1}
+
+@keyframes pulse{0%,100%{box-shadow:0 0 0 4px rgba(74,144,217,0.2)}50%{box-shadow:0 0 0 10px rgba(74,144,217,0.1)}}
+.timer-btn.running{animation:pulse 2s infinite}
+
+.project-select{padding:10px 0;text-align:center}
+.project-select .title{font-size:12px;color:var(--text2);margin-bottom:10px;font-weight:500}
+.project-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.project-chip{padding:8px 16px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);font-size:13px;color:var(--text2);cursor:pointer;transition:all .2s;font-weight:500}
+.project-chip:hover{border-color:var(--accent);color:var(--accent)}
+.project-chip.active{background:var(--accent);border-color:var(--accent);color:white}
+
+/* ===== CALENDAR PAGE ===== */
+.week-nav{display:flex;align-items:center;justify-content:space-between;padding:8px 4px;margin-bottom:8px}
+.week-nav button{width:36px;height:36px;border-radius:50%;border:none;background:var(--card);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);transition:all .15s}
+.week-nav button:hover{background:var(--accent);color:white}
+.week-nav button:active{transform:scale(0.9)}
+.week-nav .label{font-size:14px;font-weight:600;color:var(--text)}
+.week-nav .sub{font-size:11px;color:var(--text2);font-weight:400}
+
+.calendar-grid{background:var(--card);border-radius:var(--radius2);box-shadow:var(--shadow);overflow:hidden}
+.cal-header{display:grid;grid-template-columns:44px repeat(7,1fr);border-bottom:1px solid var(--border)}
+.cal-header-cell{padding:8px 2px;text-align:center;font-size:11px;color:var(--text2);font-weight:500}
+.cal-header-cell.today{color:var(--accent);font-weight:700}
+.cal-header-cell .day-num{font-size:14px;font-weight:600;color:var(--text);margin-top:2px}
+.cal-header-cell.today .day-num{background:var(--accent);color:white;width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px}
+
+.cal-body{display:grid;grid-template-columns:44px repeat(7,1fr);position:relative;height:480px;overflow-y:auto}
+.cal-body::-webkit-scrollbar{width:3px}
+.cal-body::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+.cal-time-col{grid-column:1;display:flex;flex-direction:column}
+.cal-time-label{height:40px;display:flex;align-items:flex-start;justify-content:center;font-size:10px;color:var(--text3);padding-top:0;transform:translateY(-6px)}
+.cal-day-col{position:relative;border-left:1px solid var(--border)}
+.cal-hour-line{position:absolute;left:0;right:0;border-top:1px solid var(--border);height:40px}
+.cal-block{position:absolute;left:2px;right:2px;border-radius:4px;font-size:9px;color:white;padding:2px 4px;overflow:hidden;min-height:6px;cursor:pointer;opacity:0.85;transition:opacity .15s}
+.cal-block:hover{opacity:1;z-index:2}
+.cal-block.cat-research{background:var(--blue)}
+.cal-block.cat-non-research{background:var(--gray)}
+.cal-block.cat-meeting{background:var(--orange)}
+
+/* ===== RECORD PAGE ===== */
+.record-header{display:flex;align-items:center;justify-content:space-between;padding:8px 4px;margin-bottom:8px}
+.record-header .nav{display:flex;align-items:center;gap:4px}
+.record-header .nav button{width:36px;height:36px;border-radius:50%;border:none;background:var(--card);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);transition:all .15s}
+.record-header .nav button:hover{background:var(--accent);color:white}
+.record-header .nav .label{font-size:14px;font-weight:600;color:var(--text);min-width:100px;text-align:center}
+.record-actions{display:flex;gap:6px}
+.record-actions button{padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text2);font-size:12px;cursor:pointer;transition:all .15s;font-weight:500}
+.record-actions button:hover{border-color:var(--accent);color:var(--accent)}
+.record-summary{text-align:center;padding:6px 012px;font-size:13px;color:var(--text2)}
+.record-summary span{font-weight:600;color:var(--text)}
+.record-list{display:flex;flex-direction:column;gap:8px}
+.record-item{background:var(--card);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px;transition:all .15s}
+.record-item:hover{box-shadow:var(--shadow2)}
+.record-cat{width:4px;height:40px;border-radius:2px;flex-shrink:0}
+.record-cat.research{background:var(--blue)}
+.record-cat.non-research{background:var(--gray)}
+.record-cat.meeting{background:var(--orange)}
+.record-info{flex:1;min-width:0}
+.record-info .cat-name{font-size:14px;font-weight:600;color:var(--text)}
+.record-info .proj-name{font-size:11px;color:var(--text2);margin-top:1px}
+.record-info .time-range{font-size:12px;color:var(--text2);margin-top:4px;font-variant-numeric:tabular-nums}
+.record-info .duration{font-size:11px;color:var(--text3);margin-top:1px}
+.record-btns{display:flex;gap:6px;flex-shrink:0}
+.record-btns button{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.record-btns button:hover{border-color:var(--accent);color:var(--accent)}
+.record-btns button.del:hover{border-color:var(--red);color:var(--red)}
+.empty-state{text-align:center;padding:60px 20px;color:var(--text3);font-size:14px}
+.empty-state .icon{font-size:40px;margin-bottom:12px;opacity:0.5}
+
+/* ===== STATS PAGE ===== */
+.stats-toggle{display:flex;justify-content:center;padding:8px 0 16px}
+.toggle-container{display:flex;background:var(--card);border-radius:10px;box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--border)}
+.toggle-opt{padding:8px 20px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;transition:all .2s;border:none;background:none}
+.toggle-opt.active{background:var(--accent);color:white}
+.stats-section{margin-bottom:20px}
+.stats-section .section-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px;text-align:center}
+.chart-box{background:var(--card);border-radius:var(--radius2);box-shadow:var(--shadow);padding:16px 12px 12px;position:relative}
+.chart-box canvas{width:100%;height:220px}
+.chart-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;padding:10px 0 2px}
+.chart-legend-item{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text2)}
+.chart-legend-dot{width:10px;height:10px;border-radius:3px}
+
+/* ===== MODAL ===== */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.show{opacity:1;pointer-events:auto}
+.modal{background:var(--card);border-radius:var(--radius2);padding:24px;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,0.15);transform:scale(0.95);transition:transform .2s}
+.modal-overlay.show .modal{transform:scale(1)}
+.modal h3{font-size:16px;font-weight:600;color:var(--text);margin-bottom:16px}
+.modal-field{margin-bottom:14px}
+.modal-field label{display:block;font-size:12px;font-weight:500;color:var(--text2);margin-bottom:5px}
+.modal-field input,.modal-field select{width:100%;padding:10px 12px;border-radius:8px;border:1.5px solid var(--border);font-size:14px;color:var(--text);background:var(--bg);outline:none;transition:border-color .2s}
+.modal-field input:focus,.modal-field select:focus{border-color:var(--accent)}
+.modal-actions{display:flex;gap:8px;margin-top:20px}
+.modal-actions button{flex:1;padding:10px;border-radius:10px;border:none;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s}
+.modal-actions .cancel{background:var(--bg);color:var(--text2)}
+.modal-actions .cancel:hover{background:var(--border)}
+.modal-actions .save{background:var(--accent);color:white}
+.modal-actions .save:hover{background:var(--accent2)}
+
+/* Toast */
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-100px);background:var(--text);color:white;padding:10px 24px;border-radius:10px;font-size:13px;font-weight:500;z-index:200;transition:transform .3s ease;box-shadow:var(--shadow2)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* File input hidden */
+#importInput{display:none}
+</style>
+</head>
+<body>
+<div class="app">
+  <header><h1>⏱ Time Tracker</h1></header>
+  <main>
+    <!-- TIMER PAGE -->
+    <div id="page-timer" class="page active">
+      <div class="timer-status" id="timerStatus">
+        <div class="label">准备开始</div>
+        <div class="time" id="timerDisplay">00:00:00</div>
+        <div class="started" id="timerStarted"></div>
+      </div>
+      <div class="timer-buttons">
+        <button class="timer-btn research" data-cat="research" onclick="toggleTimer('research')">
+          <span class="icon">🔬</span><span class="name">研究</span>
+        </button>
+        <button class="timer-btn nonresearch" data-cat="non-research" onclick="toggleTimer('non-research')">
+          <span class="icon">💼</span><span class="name">打工</span>
+        </button>
+        <button class="timer-btn meeting" data-cat="meeting" onclick="toggleTimer('meeting')">
+          <span class="icon">🗣</span><span class="name">会议</span>
+        </button>
+      </div>
+      <div class="project-select" id="projectSelect" style="display:none">
+        <div class="title">选择项目</div>
+        <div class="project-chips">
+          <button class="project-chip" data-proj="AB菌" onclick="selectProject(this)">AB菌</button>
+          <button class="project-chip" data-proj="水污染" onclick="selectProject(this)">水污染</button>
+          <button class="project-chip" data-proj="Pattern" onclick="selectProject(this)">Pattern</button>
+          <button class="project-chip" data-proj="Crack" onclick="selectProject(this)">Crack</button>
+          <button class="project-chip" data-proj="其他" onclick="selectProject(this)">其他</button>
+        </div>
+      </div></div>
+
+    <!-- CALENDAR PAGE -->
+    <div id="page-calendar" class="page">
+      <div class="week-nav">
+        <button onclick="calNav(-1)">‹</button>
+        <div style="text-align:center">
+          <div class="label" id="calTitle">本周</div>
+          <div class="sub" id="calSubtitle"></div>
+        </div>
+        <button onclick="calNav(1)">›</button>
+      </div>
+      <div class="calendar-grid">
+        <div class="cal-header" id="calHeader"></div>
+        <div class="cal-body" id="calBody"></div>
+      </div>
+    </div>
+
+    <!-- RECORD PAGE -->
+    <div id="page-record" class="page">
+      <div class="record-header">
+        <div class="nav">
+          <button onclick="recNav(-1)">‹</button>
+          <div class="label" id="recTitle">今天</div>
+          <button onclick="recNav(1)">›</button>
+        </div>
+        <div class="record-actions">
+          <button onclick="exportData()">导出</button>
+          <button onclick="document.getElementById('importInput').click()">导入</button>
+          <input type="file" id="importInput" accept=".json" onchange="importData(event)">
+        </div>
+      </div>
+      <div class="record-summary" id="recSummary"></div>
+      <div class="record-list" id="recList"></div>
+    </div>
+
+    <!-- STATS PAGE -->
+    <div id="page-stats" class="page">
+      <div class="stats-toggle">
+        <div class="toggle-container">
+          <button class="toggle-opt active" data-mode="category" onclick="setStatsMode('category',this)">Category</button>
+          <button class="toggle-opt" data-mode="project" onclick="setStatsMode('project',this)">Project</button>
+        </div>
+      </div>
+      <div class="stats-section">
+        <div class="week-nav">
+          <button onclick="statsWeekNav(-1)">‹</button>
+          <div style="text-align:center">
+            <div class="label" id="statsWeekTitle">本周</div>
+            <div class="sub" id="statsWeekSub"></div>
+          </div>
+          <button onclick="statsWeekNav(1)">›</button>
+        </div>
+        <div class="chart-box">
+          <canvas id="chartWeekly" height="220"></canvas>
+          <div class="chart-legend" id="legendWeekly"></div>
+        </div>
+      </div><div class="stats-section">
+        <div class="section-title">📊 每周各日平均工作时长</div>
+        <div class="chart-box">
+          <canvas id="chartAvg" height="220"></canvas>
+          <div class="chart-legend" id="legendAvg"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-page="timer" onclick="showPage('timer',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="13" x2="15" y2="13"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="4" y1="5" x2="6" y2="7"/><line x1="20" y1="5" x2="18" y2="7"/></svg>
+      <span>计时</span>
+    </button>
+    <button class="nav-btn" data-page="calendar" onclick="showPage('calendar',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
+      <span>日历</span>
+    </button>
+    <button class="nav-btn" data-page="record" onclick="showPage('record',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
+      <span>记录</span>
+    </button>
+    <button class="nav-btn" data-page="stats" onclick="showPage('stats',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/></svg>
+      <span>统计</span>
+    </button>
+  </nav>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="editModal">
+    <h3>编辑记录</h3>
+    <div class="modal-field">
+      <label>开始时间</label>
+      <input type="datetime-local" id="editStart">
+    </div>
+    <div class="modal-field">
+      <label>结束时间</label>
+      <input type="datetime-local" id="editEnd">
+    </div>
+    <div class="modal-field">
+      <label>类别</label>
+      <select id="editCat">
+        <option value="research">研究</option>
+        <option value="non-research">打工</option>
+        <option value="meeting">会议</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label>项目</label>
+      <select id="editProj">
+        <option value="">无</option>
+        <option value="AB菌">AB菌</option>
+        <option value="水污染">水污染</option>
+        <option value="Pattern">Pattern</option>
+        <option value="Crack">Crack</option>
+        <option value="其他">其他</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="cancel" onclick="closeModal()">取消</button>
+      <button class="save" onclick="saveEdit()">保存</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/*====== DATA LAYER ====== */
+const STORAGE_KEY='time_tracker_records';
+function loadRecords(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY))||[]}catch(e){return[]}}
+function saveRecords(r){localStorage.setItem(STORAGE_KEY,JSON.stringify(r))}
+function addRecord(r){const recs=loadRecords();recs.push(r);saveRecords(recs)}
+function deleteRecord(id){const recs=loadRecords().filter(r=>r.id!==id);saveRecords(recs)}
+function updateRecord(id,data){const recs=loadRecords();const i=recs.findIndex(r=>r.id===id);if(i>-1)Object.assign(recs[i],data);saveRecords(recs)}
+
+/* ====== UTILS ====== */
+const DAY_NAMES=['周一','周二','周三','周四','周五','周六','周日'];
+const CAT_NAMES={research:'研究','non-research':'打工',meeting:'会议'};
+const CAT_COLORS={research:'#4A90D9','non-research':'#8B8580',meeting:'#E8A94D'};
+const PROJ_COLORS={'AB菌':'#9B7ED8','水污染':'#E07B7B','Pattern':'#E8C84D','Crack':'#6BBF8A','其他':'#A9A4A0','':'#CCCCCC'};
+const PROJ_LIST=['AB菌','水污染','Pattern','Crack','其他'];
+
+function pad(n){return String(n).padStart(2,'0')}
+function fmtTime(d){return pad(d.getHours())+':'+pad(d.getMinutes())}
+function fmtDuration(ms){const s=Math.floor(ms/1000);const h=Math.floor(s/3600);const m=Math.floor((s%3600)/60);const ss=s%60;return pad(h)+':'+pad(m)+':'+pad(ss)}
+function fmtDate(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function fmtDateShort(d){return (d.getMonth()+1)+'/'+d.getDate()}
+function getMonday(d){const dt=new Date(d);const day=dt.getDay();const diff=dt.getDate()-day+(day===0?-6:1);dt.setDate(diff);dt.setHours(0,0,0,0);return dt}
+function addDays(d,n){const dt=new Date(d);dt.setDate(dt.getDate()+n);return dt}
+function sameDay(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()}
+function toLocalISO(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes())}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)}
+
+/* ====== PAGE NAV ====== */
+function showPage(name,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');if(name==='calendar')renderCalendar();
+  if(name==='record')renderRecords();
+  if(name==='stats')renderStats();
+}
+
+/* ====== TIMER ====== */
+let timerState={running:false,category:null,project:'',startTime:null,interval:null};
+
+// Restore timer state
+(function restoreTimer(){
+  const saved=localStorage.getItem('timer_state');
+  if(saved){
+    try{
+      const s=JSON.parse(saved);
+      if(s.running&&s.startTime){
+        timerState.running=true;
+        timerState.category=s.category;
+        timerState.project=s.project||'';
+        timerState.startTime=new Date(s.startTime);
+        startTimerUI();
+      }
+    }catch(e){}
+  }
+})();
+
+function saveTimerState(){
+  if(timerState.running){
+    localStorage.setItem('timer_state',JSON.stringify({running:true,category:timerState.category,project:timerState.project,startTime:timerState.startTime.toISOString()}));
+  }else{
+    localStorage.removeItem('timer_state');
+  }
+}
+
+function toggleTimer(cat){
+  if(timerState.running){
+    if(timerState.category===cat){
+      stopTimer();
+    }else{
+      stopTimer();
+      startTimer(cat);
+    }
+  }else{
+    startTimer(cat);
+  }
+}
+
+function startTimer(cat){
+  timerState.running=true;
+  timerState.category=cat;
+  timerState.project='';
+  timerState.startTime=new Date();
+  updateTimerBtns();
+  showProjectSelect(cat);
+  startTimerUI();
+  saveTimerState();
+}
+
+function startTimerUI(){
+  clearInterval(timerState.interval);
+  updateTimerDisplay();
+  timerState.interval=setInterval(updateTimerDisplay,1000);
+  updateTimerBtns();
+  showProjectSelect(timerState.category);
+}
+
+function stopTimer(){
+  const rec={id:Date.now(),startTime:timerState.startTime.toISOString(),endTime:new Date().toISOString(),category:timerState.category,project:timerState.project};
+  addRecord(rec);
+  clearInterval(timerState.interval);
+  timerState.running=false;
+  timerState.category=null;
+  timerState.project='';
+  timerState.startTime=null;
+  updateTimerBtns();
+  document.getElementById('projectSelect').style.display='none';
+  document.getElementById('timerDisplay').textContent='00:00:00';
+  document.getElementById('timerStatus').querySelector('.label').textContent='准备开始';
+  document.getElementById('timerStarted').textContent='';
+  saveTimerState();
+  toast('✅ 记录已保存');
+}
+
+function updateTimerDisplay(){
+  if(!timerState.startTime)return;
+  const elapsed=Date.now()-timerState.startTime.getTime();
+  document.getElementById('timerDisplay').textContent=fmtDuration(elapsed);
+  const lbl=document.getElementById('timerStatus').querySelector('.label');
+  lbl.textContent='正在记录: '+CAT_NAMES[timerState.category]+(timerState.project?' · '+timerState.project:'');document.getElementById('timerStarted').textContent='开始于'+fmtTime(timerState.startTime);
+}
+
+function updateTimerBtns(){
+  document.querySelectorAll('.timer-btn').forEach(b=>{
+    b.classList.remove('running');
+    if(timerState.running&&b.dataset.cat===timerState.category)b.classList.add('running');
+  });
+}
+
+function showProjectSelect(cat){
+  const el=document.getElementById('projectSelect');
+  if(cat==='research'||cat==='meeting'){
+    el.style.display='block';
+    document.querySelectorAll('.project-chip').forEach(c=>c.classList.remove('active'));
+    if(timerState.project){
+      document.querySelector(`.project-chip[data-proj="${timerState.project}"]`)?.classList.add('active');
+    }
+  }else{
+    el.style.display='none';
+  }
+}
+
+function selectProject(el){
+  document.querySelectorAll('.project-chip').forEach(c=>c.classList.remove('active'));
+  if(timerState.project===el.dataset.proj){
+    timerState.project='';
+  }else{
+    el.classList.add('active');
+    timerState.project=el.dataset.proj;
+  }
+  saveTimerState();
+  updateTimerDisplay();
+}
+
+/* ====== CALENDAR ====== */
+let calWeekStart=getMonday(new Date());
+
+function calNav(dir){calWeekStart=addDays(calWeekStart,dir*7);renderCalendar()}
+
+function renderCalendar(){
+  const today=new Date();
+  const hdr=document.getElementById('calHeader');
+  const body=document.getElementById('calBody');
+
+  // Title
+  const end=addDays(calWeekStart,6);
+  const isThisWeek=sameDay(getMonday(today),calWeekStart);
+  document.getElementById('calTitle').textContent=isThisWeek?'本周':fmtDateShort(calWeekStart)+' – '+fmtDateShort(end);
+  document.getElementById('calSubtitle').textContent=calWeekStart.getFullYear()+'年'+(calWeekStart.getMonth()+1)+'月';
+
+  // Header
+  hdr.innerHTML='<div class="cal-header-cell"></div>';
+  for(let i=0;i<7;i++){
+    const d=addDays(calWeekStart,i);
+    const isToday=sameDay(d,today);
+    hdr.innerHTML+=`<div class="cal-header-cell ${isToday?'today':''}"><div>${DAY_NAMES[i]}</div><div class="day-num">${d.getDate()}</div></div>`;
+  }
+
+  // Body: 24 hours
+  const START_HOUR=0,END_HOUR=24,HOUR_H=40;
+  const totalH=(END_HOUR-START_HOUR)*HOUR_H;
+  body.innerHTML='';
+  body.style.height=Math.min(totalH,480)+'px';
+
+  // Time labels
+  let timeCol='<div class="cal-time-col" style="position:relative;height:'+totalH+'px">';
+  for(let h=START_HOUR;h<END_HOUR;h++){
+    timeCol+=`<div class="cal-time-label" style="position:absolute;top:${(h-START_HOUR)*HOUR_H}px;width:44px;height:${HOUR_H}px">${pad(h)}:00</div>`;
+  }
+  timeCol+='</div>';
+  body.innerHTML+=timeCol;
+
+  // Day columns
+  const recs=loadRecords();
+  for(let i=0;i<7;i++){
+    const d=addDays(calWeekStart,i);
+    let col=`<div class="cal-day-col" style="position:relative;height:${totalH}px">`;
+    for(let h=START_HOUR;h<END_HOUR;h++){
+      col+=`<div class="cal-hour-line" style="top:${(h-START_HOUR)*HOUR_H}px"></div>`;
+    }
+    // Records for this day
+    const dayRecs=recs.filter(r=>{const s=new Date(r.startTime);return sameDay(s,d)});
+    dayRecs.forEach(r=>{
+      const s=new Date(r.startTime),e=new Date(r.endTime);
+      const startMin=s.getHours()*60+s.getMinutes()-START_HOUR*60;
+      const endMin=e.getHours()*60+e.getMinutes()-START_HOUR*60;
+      const top=Math.max(0,startMin*HOUR_H/60);
+      const h=Math.max(4,(endMin-startMin)*HOUR_H/60);
+      const catClass=r.category==='non-research'?'cat-non-research':r.category==='meeting'?'cat-meeting':'cat-research';
+      const label=fmtTime(s)+'-'+fmtTime(e);
+      col+=`<div class="cal-block ${catClass}" style="top:${top}px;height:${h}px" title="${CAT_NAMES[r.category]}${r.project?' · '+r.project:''}\n${label}">${h>16?label:''}</div>`;
+    });
+    col+='</div>';
+    body.innerHTML+=col;
+  }
+  // Scroll to 8:00
+  body.scrollTop=8*HOUR_H;
+}
+
+/* ====== RECORDS ====== */
+let recDate=new Date();
+
+function recNav(dir){recDate=addDays(recDate,dir);renderRecords()}
+
+function renderRecords(){
+  const today=new Date();
+  const isToday=sameDay(recDate,today);
+  document.getElementById('recTitle').textContent=isToday?'今天':fmtDate(recDate);
+
+  const recs=loadRecords().filter(r=>sameDay(new Date(r.startTime),recDate)).sort((a,b)=>new Date(a.startTime)-new Date(b.startTime));
+  const list=document.getElementById('recList');
+
+  let totalMs=0;
+  recs.forEach(r=>totalMs+=new Date(r.endTime)-new Date(r.startTime));
+  document.getElementById('recSummary').innerHTML=recs.length?`共<span>${recs.length}</span> 条记录，合计 <span>${fmtDuration(totalMs)}</span>`:'';
+
+  if(!recs.length){
+    list.innerHTML='<div class="empty-state"><div class="icon">📋</div>暂无记录</div>';
+    return;
+  }
+  list.innerHTML=recs.map(r=>{
+    const s=new Date(r.startTime),e=new Date(r.endTime);
+    const dur=e-s;
+    const catCls=r.category==='non-research'?'non-research':r.category;
+    return `<div class="record-item">
+      <div class="record-cat ${catCls}"></div>
+      <div class="record-info">
+        <div class="cat-name">${CAT_NAMES[r.category]||r.category}</div>
+        ${r.project?'<div class="proj-name">'+r.project+'</div>':''}
+        <div class="time-range">${fmtTime(s)} – ${fmtTime(e)}</div>
+        <div class="duration">${fmtDuration(dur)}</div>
+      </div>
+      <div class="record-btns">
+        <button onclick="editRecord('${r.id}')" title="编辑">✏️</button>
+        <button class="del" onclick="delRecord('${r.id}')" title="删除">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function delRecord(id){
+  if(confirm('确认删除此记录？')){deleteRecord(Number(id));renderRecords();toast('已删除')}
+}
+
+let editingId=null;
+function editRecord(id){
+  editingId=Number(id);
+  const rec=loadRecords().find(r=>r.id===editingId);
+  if(!rec)return;
+  document.getElementById('editStart').value=toLocalISO(new Date(rec.startTime));
+  document.getElementById('editEnd').value=toLocalISO(new Date(rec.endTime));
+  document.getElementById('editCat').value=rec.category;
+  document.getElementById('editProj').value=rec.project||'';
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function closeModal(){document.getElementById('modalOverlay').classList.remove('show');editingId=null}
+
+function saveEdit(){
+  if(!editingId)return;
+  const s=new Date(document.getElementById('editStart').value);
+  const e=new Date(document.getElementById('editEnd').value);
+  if(isNaN(s)||isNaN(e)||e<=s){toast('⚠️ 时间无效');return}
+  updateRecord(editingId,{
+    startTime:s.toISOString(),
+    endTime:e.toISOString(),
+    category:document.getElementById('editCat').value,
+    project:document.getElementById('editProj').value
+  });
+  closeModal();renderRecords();
+  toast('已更新');
+}
+
+function exportData(){
+  const data=JSON.stringify(loadRecords(),null,2);
+  const blob=new Blob([data],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='time_tracker_'+fmtDate(new Date())+'.json';
+  a.click();
+  toast('已导出');
+}
+
+function importData(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    try{
+      const data=JSON.parse(ev.target.result);
+      if(!Array.isArray(data))throw new Error();
+      const existing=loadRecords();
+      const existingIds=new Set(existing.map(r=>r.id));
+      let added=0;
+      data.forEach(r=>{
+        if(r.startTime&&r.endTime&&r.category&&!existingIds.has(r.id)){
+          existing.push(r);added++;
+        }
+      });
+      saveRecords(existing);
+      renderRecords();
+      toast(`已导入 ${added} 条记录`);
+    }catch(err){toast('⚠️ 导入失败：文件格式错误')}
+  };
+  reader.readAsText(file);
+  e.target.value='';
+}
+
+/* ====== STATS ====== */
+let statsMode='category';
+let statsWeekStart=getMonday(new Date());
+
+function setStatsMode(mode,btn){
+  statsMode=mode;
+  document.querySelectorAll('.toggle-opt').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderStats();
+}
+function statsWeekNav(dir){statsWeekStart=addDays(statsWeekStart,dir*7);renderStats()}
+
+function renderStats(){
+  renderWeeklyChart();
+  renderAvgChart();
+}
+
+function renderWeeklyChart(){
+  const today=new Date();
+  const end=addDays(statsWeekStart,6);
+  const isThisWeek=sameDay(getMonday(today),statsWeekStart);
+  document.getElementById('statsWeekTitle').textContent=isThisWeek?'本周每日工作时长':fmtDateShort(statsWeekStart)+' – '+fmtDateShort(end);
+  document.getElementById('statsWeekSub').textContent=statsWeekStart.getFullYear()+'年';
+
+  const recs=loadRecords();
+  const days=[];
+  for(let i=0;i<7;i++){
+    const d=addDays(statsWeekStart,i);
+    const dayRecs=recs.filter(r=>sameDay(new Date(r.startTime),d));
+    days.push(dayRecs);
+  }
+
+  drawStackedBar('chartWeekly','legendWeekly',days,DAY_NAMES);
+}
+
+function renderAvgChart(){
+  const recs=loadRecords();
+  // Group by day of week (0=Mon..6=Sun)
+  const dayBuckets=Array.from({length:7},()=>[]);
+  const weeksSeen=new Set();
+  recs.forEach(r=>{
+    const s=new Date(r.startTime);
+    let dow=s.getDay()-1;if(dow<0)dow=6;
+    dayBuckets[dow].push(r);
+    weeksSeen.add(fmtDate(getMonday(s)));
+  });
+
+  const numWeeks=Math.max(1,weeksSeen.size);
+  // For average, we treat each day's records as a combined set and divide by numWeeks
+  drawStackedBar('chartAvg','legendAvg',dayBuckets,DAY_NAMES,numWeeks);
+}
+
+function drawStackedBar(canvasId,legendId,dayData,labels,divideBy){
+  const canvas=document.getElementById(canvasId);
+  const ctx=canvas.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  const rect=canvas.getBoundingClientRect();
+  canvas.width=rect.width*dpr;
+  canvas.height=220*dpr;
+  ctx.scale(dpr,dpr);
+  const W=rect.width,H=220;
+  ctx.clearRect(0,0,W,H);
+
+  let keys,colors;
+  if(statsMode==='category'){
+    keys=['research','non-research','meeting'];
+    colors=[CAT_COLORS.research,CAT_COLORS['non-research'],CAT_COLORS.meeting];
+  }else{
+    keys=['AB菌','水污染','Pattern','Crack','其他',''];
+    colors=[PROJ_COLORS['AB菌'],PROJ_COLORS['水污染'],PROJ_COLORS['Pattern'],PROJ_COLORS['Crack'],PROJ_COLORS['其他'],PROJ_COLORS['']];
+  }
+
+  // Compute stacks
+  const stacks=dayData.map(recs=>{
+    const vals=keys.map(k=>{
+      let ms=0;
+      recs.forEach(r=>{
+        const match=statsMode==='category'?(r.category===k):(r.project===k||(k===''&&!r.project));
+        if(match)ms+=new Date(r.endTime)-new Date(r.startTime);
+      });
+      return ms/3600000; // hours
+    });
+    if(divideBy)return vals.map(v=>v/divideBy);
+    return vals;
+  });
+
+  const maxVal=Math.max(1,...stacks.map(s=>s.reduce((a,b)=>a+b,0)));
+  const padL=36,padR=12,padT=16,padB=32;
+  const chartW=W-padL-padR,chartH=H-padT-padB;
+  const barW=chartW/7*0.55;
+  const gap=chartW/7;
+
+  // Y axis
+  ctx.strokeStyle='#E8E0D6';ctx.lineWidth=1;
+  ctx.fillStyle='#B5AFA8';ctx.font='10px sans-serif';ctx.textAlign='right';
+  const yTicks=5;
+  for(let i=0;i<=yTicks;i++){
+    const v=maxVal*i/yTicks;
+    const y=padT+chartH-chartH*i/yTicks;
+    ctx.beginPath();ctx.moveTo(padL,y);ctx.lineTo(W-padR,y);ctx.stroke();
+    ctx.fillText(v.toFixed(1)+'h',padL-4,y+3);
+  }
+
+  // Bars
+  stacks.forEach((stack,di)=>{
+    const x=padL+gap*di+(gap-barW)/2;
+    let yBot=padT+chartH;
+    stack.forEach((val,ki)=>{
+      if(val<=0)return;
+      const h=val/maxVal*chartH;
+      ctx.fillStyle=colors[ki];
+      roundRect(ctx,x,yBot-h,barW,h,3);
+      ctx.fill();
+      yBot-=h;
+    });
+    // Label
+    ctx.fillStyle='#8B8580';ctx.font='11px sans-serif';ctx.textAlign='center';
+    ctx.fillText(labels[di],x+barW/2,H-8);
+  });
+
+  // Legend
+  const legend=document.getElementById(legendId);
+  const displayKeys=statsMode==='category'?keys:keys.filter(k=>k!=='');
+  const displayColors=statsMode==='category'?colors:colors.slice(0,-1);
+  const displayNames=statsMode==='category'?keys.map(k=>CAT_NAMES[k]):displayKeys;
+  legend.innerHTML=displayNames.map((n,i)=>`<div class="chart-legend-item"><div class="chart-legend-dot" style="background:${displayColors[i]}"></div>${n}</div>`).join('');
+}
+
+function roundRect(ctx,x,y,w,h,r){
+  if(h<1)return;
+  r=Math.min(r,h/2,w/2);
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);
+  ctx.closePath();
+}
+
+/* ====== PWA REGISTER ====== */
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(e=>console.log('SW registration failed',e));
+}
+
+/* ====== INIT ====== */
+window.addEventListener('resize',()=>{
+  const active=document.querySelector('.page.active');
+  if(active.id==='page-calendar')renderCalendar();
+  if(active.id==='page-stats')renderStats();
+});
+
+// Category change in edit modal hides/shows project
+document.getElementById('editCat').addEventListener('change',function(){
+  const projField=document.getElementById('editProj').parentNode;
+  if(this.value==='non-research'){
+    document.getElementById('editProj').value='';
+  }
+});
+</script>
+</body>
+</html>
