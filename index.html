@@ -32,7 +32,7 @@ main::-webkit-scrollbar{display:none}
 
 /* Bottom Navigation */
 .bottom-nav{display:flex;background:var(--card);border-top:1px solid var(--border);flex-shrink:0;padding-bottom:env(safe-area-inset-bottom)}
-.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0 8px;border:none;background:none;color:var(--text3);font-size:10px;font-weight:500;cursor:pointer;transition:color .2s}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:12px 0 10px;border:none;background:none;color:var(--text3);font-size:10px;font-weight:500;cursor:pointer;transition:color .2s}
 .nav-btn.active{color:var(--accent)}
 .nav-btn svg{width:22px;height:22px;transition:all .2s}
 .nav-btn.active svg{transform:scale(1.05)}
@@ -51,8 +51,8 @@ main::-webkit-scrollbar{display:none}
 .timer-btn{width:120px;height:120px;border-radius:50%;border:3px solid transparent;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;box-shadow:var(--shadow2);transition:all .2s;position:relative;overflow:hidden}
 .timer-btn::before{content:'';position:absolute;inset:0;border-radius:50%;opacity:0;transition:opacity .2s}
 .timer-btn:active{transform:scale(0.95)}
-.timer-btn .icon{font-size:28px}
-.timer-btn .name{font-size:13px;font-weight:600;letter-spacing:0.5px}
+.timer-btn .icon{width:28px;height:28px;display:flex;align-items:center;justify-content:center;position:relative;z-index:1}
+.timer-btn .name{font-size:13px;font-weight:600;letter-spacing:0.5px;position:relative;z-index:1}
 
 .timer-btn.research{border-color:var(--blue);color:var(--blue)}
 .timer-btn.research::before{background:var(--blue-light)}
@@ -126,7 +126,7 @@ main::-webkit-scrollbar{display:none}
 .record-cat.non-research{background:var(--gray)}
 .record-cat.meeting{background:var(--orange)}
 .record-info{flex:1;min-width:0}
-.record-info .cat-name{font-size:14px;font-weight:600;color:var(--text)}
+.record-info .cat-name{font-size:16px;font-weight:600;color:var(--text)}
 .record-info .proj-name{font-size:11px;color:var(--text2);margin-top:1px}
 .record-info .time-range{font-size:12px;color:var(--text2);margin-top:4px;font-variant-numeric:tabular-nums}
 .record-info .duration{font-size:11px;color:var(--text3);margin-top:1px}
@@ -135,7 +135,7 @@ main::-webkit-scrollbar{display:none}
 .record-btns button:hover{border-color:var(--accent);color:var(--accent)}
 .record-btns button.del:hover{border-color:var(--red);color:var(--red)}
 .empty-state{text-align:center;padding:60px 20px;color:var(--text3);font-size:14px}
-.empty-state .icon{font-size:40px;margin-bottom:12px;opacity:0.5}
+.empty-state .icon{display:flex;justify-content:center;margin-bottom:12px;opacity:0.5;color:var(--text3)}
 
 /* ===== STATS PAGE ===== */
 .stats-toggle{display:flex;justify-content:center;padding:8px 0 16px}
@@ -177,7 +177,7 @@ main::-webkit-scrollbar{display:none}
 </head>
 <body>
 <div class="app">
-  <header><h1>⏱ Time Tracker</h1></header>
+  <header><h1><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:6px"><circle cx="12" cy="13" r="8"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="13" x2="15" y2="13"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="4" y1="5" x2="6" y2="7"/><line x1="20" y1="5" x2="18" y2="7"/></svg>Time Tracker</h1></header>
   <main>
     <!-- TIMER PAGE -->
     <div id="page-timer" class="page active">
@@ -188,13 +188,13 @@ main::-webkit-scrollbar{display:none}
       </div>
       <div class="timer-buttons">
         <button class="timer-btn research" data-cat="research" onclick="toggleTimer('research')">
-          <span class="icon">🔬</span><span class="name">研究</span>
+          <span class="icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M8 3v8L4 19a1 1 0 00.9 1.4h14.2A1 1 0 0020 19l-4-8V3"/><line x1="6" y1="14" x2="18" y2="14"/></svg></span><span class="name">研究</span>
         </button>
         <button class="timer-btn nonresearch" data-cat="non-research" onclick="toggleTimer('non-research')">
-          <span class="icon">💼</span><span class="name">打工</span>
+          <span class="icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="2" y1="14" x2="22" y2="14"/></svg></span><span class="name">打工</span>
         </button>
         <button class="timer-btn meeting" data-cat="meeting" onclick="toggleTimer('meeting')">
-          <span class="icon">🗣</span><span class="name">会议</span>
+          <span class="icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span><span class="name">会议</span>
         </button>
       </div>
       <div class="project-select" id="projectSelect" style="display:none">
@@ -233,6 +233,7 @@ main::-webkit-scrollbar{display:none}
           <button onclick="recNav(1)">›</button>
         </div>
         <div class="record-actions">
+          <button onclick="openAddModal()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="vertical-align:-1px;margin-right:3px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>新增</button>
           <button onclick="exportData()">导出</button>
           <button onclick="document.getElementById('importInput').click()">导入</button>
           <input type="file" id="importInput" accept=".json" onchange="importData(event)">
@@ -264,7 +265,7 @@ main::-webkit-scrollbar{display:none}
           <div class="chart-legend" id="legendWeekly"></div>
         </div>
       </div><div class="stats-section">
-        <div class="section-title">📊 每周各日平均工作时长</div>
+        <div class="section-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/></svg>每周各日平均工作时长</div>
         <div class="chart-box">
           <canvas id="chartAvg" height="220"></canvas>
           <div class="chart-legend" id="legendAvg"></div>
@@ -350,6 +351,7 @@ const PROJ_LIST=['AB菌','水污染','Pattern','Crack','其他'];
 function pad(n){return String(n).padStart(2,'0')}
 function fmtTime(d){return pad(d.getHours())+':'+pad(d.getMinutes())}
 function fmtDuration(ms){const s=Math.floor(ms/1000);const h=Math.floor(s/3600);const m=Math.floor((s%3600)/60);const ss=s%60;return pad(h)+':'+pad(m)+':'+pad(ss)}
+function fmtDurationShort(ms){const s=Math.floor(ms/1000);const h=Math.floor(s/3600);const m=Math.floor((s%3600)/60);if(h>0&&m>0)return h+' h '+m+' min';if(h>0)return h+' h';return (m||1)+' min'}
 function fmtDate(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
 function fmtDateShort(d){return (d.getMonth()+1)+'/'+d.getDate()}
 function getMonday(d){const dt=new Date(d);const day=dt.getDay();const diff=dt.getDate()-day+(day===0?-6:1);dt.setDate(diff);dt.setHours(0,0,0,0);return dt}
@@ -429,8 +431,13 @@ function startTimerUI(){
 }
 
 function stopTimer(){
-  const rec={id:Date.now(),startTime:timerState.startTime.toISOString(),endTime:new Date().toISOString(),category:timerState.category,project:timerState.project};
-  addRecord(rec);
+  const endTime=new Date();
+  const dur=endTime-timerState.startTime;
+  const tooShort=dur<60000;
+  if(!tooShort){
+    const rec={id:Date.now(),startTime:timerState.startTime.toISOString(),endTime:endTime.toISOString(),category:timerState.category,project:timerState.project};
+    addRecord(rec);
+  }
   clearInterval(timerState.interval);
   timerState.running=false;
   timerState.category=null;
@@ -442,7 +449,7 @@ function stopTimer(){
   document.getElementById('timerStatus').querySelector('.label').textContent='准备开始';
   document.getElementById('timerStarted').textContent='';
   saveTimerState();
-  toast('✅ 记录已保存');
+  if(tooShort){toast('计时不足1分钟，未记录')}else{toast('记录已保存')}
 }
 
 function updateTimerDisplay(){
@@ -541,7 +548,7 @@ function renderCalendar(){
       const h=Math.max(4,(endMin-startMin)*HOUR_H/60);
       const catClass=r.category==='non-research'?'cat-non-research':r.category==='meeting'?'cat-meeting':'cat-research';
       const label=fmtTime(s)+'-'+fmtTime(e);
-      col+=`<div class="cal-block ${catClass}" style="top:${top}px;height:${h}px" title="${CAT_NAMES[r.category]}${r.project?' · '+r.project:''}\n${label}">${h>16?label:''}</div>`;
+      col+=`<div class="cal-block ${catClass}" style="top:${top}px;height:${h}px" title="${CAT_NAMES[r.category]}${r.project?' · '+r.project:''}\n${label}"></div>`;
     });
     col+='</div>';
     body.innerHTML+=col;
@@ -568,24 +575,24 @@ function renderRecords(){
   document.getElementById('recSummary').innerHTML=recs.length?`共<span>${recs.length}</span> 条记录，合计 <span>${fmtDuration(totalMs)}</span>`:'';
 
   if(!recs.length){
-    list.innerHTML='<div class="empty-state"><div class="icon">📋</div>暂无记录</div>';
+    list.innerHTML='<div class="empty-state"><div class="icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg></div>暂无记录</div>';
     return;
   }
   list.innerHTML=recs.map(r=>{
     const s=new Date(r.startTime),e=new Date(r.endTime);
     const dur=e-s;
     const catCls=r.category==='non-research'?'non-research':r.category;
+    const row1=CAT_NAMES[r.category]+(r.project?' — '+r.project:'');
+    const row2=`${fmtTime(s)} – ${fmtTime(e)} | <strong>${fmtDurationShort(dur)}</strong>`;
     return `<div class="record-item">
       <div class="record-cat ${catCls}"></div>
       <div class="record-info">
-        <div class="cat-name">${CAT_NAMES[r.category]||r.category}</div>
-        ${r.project?'<div class="proj-name">'+r.project+'</div>':''}
-        <div class="time-range">${fmtTime(s)} – ${fmtTime(e)}</div>
-        <div class="duration">${fmtDuration(dur)}</div>
+        <div class="cat-name">${row1}</div>
+        <div class="time-range">${row2}</div>
       </div>
       <div class="record-btns">
-        <button onclick="editRecord('${r.id}')" title="编辑">✏️</button>
-        <button class="del" onclick="delRecord('${r.id}')" title="删除">🗑</button>
+        <button onclick="editRecord('${r.id}')" title="编辑"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+        <button class="del" onclick="delRecord('${r.id}')" title="删除"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg></button>
       </div>
     </div>`;
   }).join('');
@@ -595,11 +602,24 @@ function delRecord(id){
   if(confirm('确认删除此记录？')){deleteRecord(Number(id));renderRecords();toast('已删除')}
 }
 
+function openAddModal(){
+  editingId=null;
+  document.getElementById('editModal').querySelector('h3').textContent='新增记录';
+  const now=new Date();
+  const oneHourAgo=new Date(now.getTime()-3600000);
+  document.getElementById('editStart').value=toLocalISO(oneHourAgo);
+  document.getElementById('editEnd').value=toLocalISO(now);
+  document.getElementById('editCat').value='research';
+  document.getElementById('editProj').value='';
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
 let editingId=null;
 function editRecord(id){
   editingId=Number(id);
   const rec=loadRecords().find(r=>r.id===editingId);
   if(!rec)return;
+  document.getElementById('editModal').querySelector('h3').textContent='编辑记录';
   document.getElementById('editStart').value=toLocalISO(new Date(rec.startTime));
   document.getElementById('editEnd').value=toLocalISO(new Date(rec.endTime));
   document.getElementById('editCat').value=rec.category;
@@ -610,18 +630,19 @@ function editRecord(id){
 function closeModal(){document.getElementById('modalOverlay').classList.remove('show');editingId=null}
 
 function saveEdit(){
-  if(!editingId)return;
   const s=new Date(document.getElementById('editStart').value);
   const e=new Date(document.getElementById('editEnd').value);
-  if(isNaN(s)||isNaN(e)||e<=s){toast('⚠️ 时间无效');return}
-  updateRecord(editingId,{
-    startTime:s.toISOString(),
-    endTime:e.toISOString(),
-    category:document.getElementById('editCat').value,
-    project:document.getElementById('editProj').value
-  });
+  if(isNaN(s)||isNaN(e)||e<=s){toast('时间无效');return}
+  const cat=document.getElementById('editCat').value;
+  const proj=document.getElementById('editProj').value;
+  if(editingId){
+    updateRecord(editingId,{startTime:s.toISOString(),endTime:e.toISOString(),category:cat,project:proj});
+    toast('已更新');
+  }else{
+    addRecord({id:Date.now(),startTime:s.toISOString(),endTime:e.toISOString(),category:cat,project:proj});
+    toast('已添加');
+  }
   closeModal();renderRecords();
-  toast('已更新');
 }
 
 function exportData(){
@@ -652,7 +673,7 @@ function importData(e){
       saveRecords(existing);
       renderRecords();
       toast(`已导入 ${added} 条记录`);
-    }catch(err){toast('⚠️ 导入失败：文件格式错误')}
+    }catch(err){toast('导入失败：文件格式错误')}
   };
   reader.readAsText(file);
   e.target.value='';
@@ -669,6 +690,20 @@ function setStatsMode(mode,btn){
   renderStats();
 }
 function statsWeekNav(dir){statsWeekStart=addDays(statsWeekStart,dir*7);renderStats()}
+
+function computeWeeklyGlobalMax(){
+  const recs=loadRecords();
+  const dayTotals={};
+  recs.forEach(r=>{
+    if(statsMode==='project'&&!r.project)return;
+    const d=fmtDate(new Date(r.startTime));
+    const ms=new Date(r.endTime)-new Date(r.startTime);
+    dayTotals[d]=(dayTotals[d]||0)+ms;
+  });
+  const vals=Object.values(dayTotals);
+  if(!vals.length)return 1;
+  return Math.ceil(Math.max(1,...vals.map(v=>v/3600000)));
+}
 
 function renderStats(){
   renderWeeklyChart();
@@ -690,7 +725,8 @@ function renderWeeklyChart(){
     days.push(dayRecs);
   }
 
-  drawStackedBar('chartWeekly','legendWeekly',days,DAY_NAMES);
+  const globalMax=computeWeeklyGlobalMax();
+  drawStackedBar('chartWeekly','legendWeekly',days,DAY_NAMES,undefined,globalMax);
 }
 
 function renderAvgChart(){
@@ -707,10 +743,10 @@ function renderAvgChart(){
 
   const numWeeks=Math.max(1,weeksSeen.size);
   // For average, we treat each day's records as a combined set and divide by numWeeks
-  drawStackedBar('chartAvg','legendAvg',dayBuckets,DAY_NAMES,numWeeks);
+  drawStackedBar('chartAvg','legendAvg',dayBuckets,DAY_NAMES,numWeeks,undefined);
 }
 
-function drawStackedBar(canvasId,legendId,dayData,labels,divideBy){
+function drawStackedBar(canvasId,legendId,dayData,labels,divideBy,fixedYMax){
   const canvas=document.getElementById(canvasId);
   const ctx=canvas.getContext('2d');
   const dpr=window.devicePixelRatio||1;
@@ -726,8 +762,8 @@ function drawStackedBar(canvasId,legendId,dayData,labels,divideBy){
     keys=['research','non-research','meeting'];
     colors=[CAT_COLORS.research,CAT_COLORS['non-research'],CAT_COLORS.meeting];
   }else{
-    keys=['AB菌','水污染','Pattern','Crack','其他',''];
-    colors=[PROJ_COLORS['AB菌'],PROJ_COLORS['水污染'],PROJ_COLORS['Pattern'],PROJ_COLORS['Crack'],PROJ_COLORS['其他'],PROJ_COLORS['']];
+    keys=['AB菌','水污染','Pattern','Crack','其他'];
+    colors=[PROJ_COLORS['AB菌'],PROJ_COLORS['水污染'],PROJ_COLORS['Pattern'],PROJ_COLORS['Crack'],PROJ_COLORS['其他']];
   }
 
   // Compute stacks
@@ -735,30 +771,30 @@ function drawStackedBar(canvasId,legendId,dayData,labels,divideBy){
     const vals=keys.map(k=>{
       let ms=0;
       recs.forEach(r=>{
-        const match=statsMode==='category'?(r.category===k):(r.project===k||(k===''&&!r.project));
+        const match=statsMode==='category'?(r.category===k):(r.project===k);
         if(match)ms+=new Date(r.endTime)-new Date(r.startTime);
       });
-      return ms/3600000; // hours
+      return ms/3600000;
     });
     if(divideBy)return vals.map(v=>v/divideBy);
     return vals;
   });
 
-  const maxVal=Math.max(1,...stacks.map(s=>s.reduce((a,b)=>a+b,0)));
+  const dataMax=Math.max(0,...stacks.map(s=>s.reduce((a,b)=>a+b,0)));
+  const yMax=fixedYMax!==undefined?fixedYMax:Math.ceil(Math.max(1,dataMax));
+
   const padL=36,padR=12,padT=16,padB=32;
   const chartW=W-padL-padR,chartH=H-padT-padB;
   const barW=chartW/7*0.55;
   const gap=chartW/7;
 
-  // Y axis
+  // Y axis: 1h ticks
   ctx.strokeStyle='#E8E0D6';ctx.lineWidth=1;
   ctx.fillStyle='#B5AFA8';ctx.font='10px sans-serif';ctx.textAlign='right';
-  const yTicks=5;
-  for(let i=0;i<=yTicks;i++){
-    const v=maxVal*i/yTicks;
-    const y=padT+chartH-chartH*i/yTicks;
+  for(let i=0;i<=yMax;i++){
+    const y=padT+chartH-chartH*i/yMax;
     ctx.beginPath();ctx.moveTo(padL,y);ctx.lineTo(W-padR,y);ctx.stroke();
-    ctx.fillText(v.toFixed(1)+'h',padL-4,y+3);
+    ctx.fillText(i+'h',padL-4,y+3);
   }
 
   // Bars
@@ -767,23 +803,19 @@ function drawStackedBar(canvasId,legendId,dayData,labels,divideBy){
     let yBot=padT+chartH;
     stack.forEach((val,ki)=>{
       if(val<=0)return;
-      const h=val/maxVal*chartH;
+      const h=val/yMax*chartH;
       ctx.fillStyle=colors[ki];
-      roundRect(ctx,x,yBot-h,barW,h,3);
-      ctx.fill();
+      ctx.fillRect(x,yBot-h,barW,h);
       yBot-=h;
     });
-    // Label
     ctx.fillStyle='#8B8580';ctx.font='11px sans-serif';ctx.textAlign='center';
     ctx.fillText(labels[di],x+barW/2,H-8);
   });
 
   // Legend
   const legend=document.getElementById(legendId);
-  const displayKeys=statsMode==='category'?keys:keys.filter(k=>k!=='');
-  const displayColors=statsMode==='category'?colors:colors.slice(0,-1);
-  const displayNames=statsMode==='category'?keys.map(k=>CAT_NAMES[k]):displayKeys;
-  legend.innerHTML=displayNames.map((n,i)=>`<div class="chart-legend-item"><div class="chart-legend-dot" style="background:${displayColors[i]}"></div>${n}</div>`).join('');
+  const displayNames=statsMode==='category'?keys.map(k=>CAT_NAMES[k]):keys;
+  legend.innerHTML=displayNames.map((n,i)=>`<div class="chart-legend-item"><div class="chart-legend-dot" style="background:${colors[i]}"></div>${n}</div>`).join('');
 }
 
 function roundRect(ctx,x,y,w,h,r){
