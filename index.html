@@ -48,26 +48,27 @@ main::-webkit-scrollbar{display:none}
 .timer-status .time{font-size:42px;font-weight:300;color:var(--text);font-variant-numeric:tabular-nums;letter-spacing:1px}
 .timer-status .started{font-size:12px;color:var(--text3);margin-top:4px}
 .timer-buttons{display:flex;flex-direction:column;align-items:center;gap:20px;padding:10px 0 20px}
-.timer-btn{width:120px;height:120px;border-radius:50%;border:3px solid transparent;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;box-shadow:var(--shadow2);transition:all .2s;position:relative;overflow:hidden}
+.timer-btn{width:120px;height:120px;border-radius:50%;border:none;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:20px;gap:3px;cursor:pointer;box-shadow:var(--shadow2);transition:all .2s;position:relative;overflow:hidden}
 .timer-btn::before{content:'';position:absolute;inset:0;border-radius:50%;opacity:0;transition:opacity .2s}
 .timer-btn:active{transform:scale(0.95)}
 .timer-btn .icon{width:28px;height:28px;display:flex;align-items:center;justify-content:center;position:relative;z-index:1}
-.timer-btn .name{font-size:13px;font-weight:600;letter-spacing:0.5px;position:relative;z-index:1}
+.timer-btn .name{font-size:15px;font-weight:600;letter-spacing:0.5px;position:relative;z-index:1}
+.timer-btn .today-dur{font-size:11px;font-weight:500;opacity:0.7;position:relative;z-index:1;margin-top:1px}
 
-.timer-btn.research{border-color:var(--blue);color:var(--blue)}
-.timer-btn.research::before{background:var(--blue-light)}
-.timer-btn.research.running{background:var(--blue);color:white;box-shadow:0 0 0 6px rgba(74,144,217,0.2)}
-.timer-btn.research.running::before{opacity:0}
+.timer-btn.research{background:var(--blue-light);color:var(--blue)}
+.timer-btn.research::before{background:var(--blue)}
+.timer-btn.research.running{color:white;box-shadow:0 0 0 6px rgba(74,144,217,0.2)}
+.timer-btn.research.running::before{opacity:1}
 
-.timer-btn.nonresearch{border-color:var(--gray);color:var(--gray)}
-.timer-btn.nonresearch::before{background:var(--gray-light)}
-.timer-btn.nonresearch.running{background:var(--gray);color:white;box-shadow:0 0 0 6px rgba(139,133,128,0.2)}
+.timer-btn.nonresearch{background:var(--gray-light);color:var(--gray)}
+.timer-btn.nonresearch::before{background:var(--gray)}
+.timer-btn.nonresearch.running{color:white;box-shadow:0 0 0 6px rgba(139,133,128,0.2)}
+.timer-btn.nonresearch.running::before{opacity:1}
 
-.timer-btn.meeting{border-color:var(--orange);color:var(--orange)}
-.timer-btn.meeting::before{background:var(--orange-light)}
-.timer-btn.meeting.running{background:var(--orange);color:white;box-shadow:0 0 0 6px rgba(232,169,77,0.2)}
-
-.timer-btn:not(.running):hover::before{opacity:1}
+.timer-btn.meeting{background:var(--orange-light);color:var(--orange)}
+.timer-btn.meeting::before{background:var(--orange)}
+.timer-btn.meeting.running{color:white;box-shadow:0 0 0 6px rgba(232,169,77,0.2)}
+.timer-btn.meeting.running::before{opacity:1}
 
 @keyframes pulse{0%,100%{box-shadow:0 0 0 4px rgba(74,144,217,0.2)}50%{box-shadow:0 0 0 10px rgba(74,144,217,0.1)}}
 .timer-btn.running{animation:pulse 2s infinite}
@@ -137,18 +138,22 @@ main::-webkit-scrollbar{display:none}
 .empty-state{text-align:center;padding:60px 20px;color:var(--text3);font-size:14px}
 .empty-state .icon{display:flex;justify-content:center;margin-bottom:12px;opacity:0.5;color:var(--text3)}
 
+.chart-toggle{display:flex;justify-content:center;margin-bottom:10px}
+.chart-toggle-container{display:flex;background:var(--bg);border-radius:8px;overflow:hidden;border:1px solid var(--border2)}
+.chart-toggle-opt{padding:5px 13px;font-size:12px;font-weight:500;color:var(--text2);cursor:pointer;transition:all .18s;border:none;background:none;white-space:nowrap}
+.chart-toggle-opt.active{background:var(--accent);color:white}
+
 /* ===== STATS PAGE ===== */
-.stats-toggle{display:flex;justify-content:center;padding:8px 0 16px}
+.stats-toggle{display:flex;justify-content:center;padding:8px 0 12px}
 .toggle-container{display:flex;background:var(--card);border-radius:10px;box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--border)}
 .toggle-opt{padding:8px 20px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;transition:all .2s;border:none;background:none}
 .toggle-opt.active{background:var(--accent);color:white}
+.stats-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;padding:0 8px 14px}
+.legend-item{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;border:2px solid;cursor:pointer;font-size:12px;font-weight:500;transition:all .18s;user-select:none}
 .stats-section{margin-bottom:20px}
 .stats-section .section-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px;text-align:center}
 .chart-box{background:var(--card);border-radius:var(--radius2);box-shadow:var(--shadow);padding:16px 12px 12px;position:relative}
 .chart-box canvas{width:100%;height:220px}
-.chart-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;padding:10px 0 2px}
-.chart-legend-item{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text2)}
-.chart-legend-dot{width:10px;height:10px;border-radius:3px}
 
 /* ===== MODAL ===== */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
@@ -188,13 +193,13 @@ main::-webkit-scrollbar{display:none}
       </div>
       <div class="timer-buttons">
         <button class="timer-btn research" data-cat="research" onclick="toggleTimer('research')">
-          <span class="icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M8 3v8L4 19a1 1 0 00.9 1.4h14.2A1 1 0 0020 19l-4-8V3"/><line x1="6" y1="14" x2="18" y2="14"/></svg></span><span class="name">研究</span>
+          <span class="icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M8 3v8L4 19a1 1 0 00.9 1.4h14.2A1 1 0 0020 19l-4-8V3"/><line x1="6" y1="14" x2="18" y2="14"/></svg></span><span class="name">研究</span><span class="today-dur" id="dur-research">00:00</span>
         </button>
         <button class="timer-btn nonresearch" data-cat="non-research" onclick="toggleTimer('non-research')">
-          <span class="icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="2" y1="14" x2="22" y2="14"/></svg></span><span class="name">打工</span>
+          <span class="icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="2" y1="14" x2="22" y2="14"/></svg></span><span class="name">打工</span><span class="today-dur" id="dur-non-research">00:00</span>
         </button>
         <button class="timer-btn meeting" data-cat="meeting" onclick="toggleTimer('meeting')">
-          <span class="icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span><span class="name">会议</span>
+          <span class="icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span><span class="name">会议</span><span class="today-dur" id="dur-meeting">00:00</span>
         </button>
       </div>
       <div class="project-select" id="projectSelect" style="display:none">
@@ -251,8 +256,16 @@ main::-webkit-scrollbar{display:none}
           <button class="toggle-opt" data-mode="project" onclick="setStatsMode('project',this)">Project</button>
         </div>
       </div>
+      <div class="stats-legend" id="statsLegend"></div>
       <div class="stats-section">
-        <div class="week-nav">
+        <div class="chart-toggle">
+          <div class="chart-toggle-container" id="upperToggle">
+            <button class="chart-toggle-opt active" onclick="setUpperMode('daily',this)">每日</button>
+            <button class="chart-toggle-opt" onclick="setUpperMode('weekly',this)">每周</button>
+            <button class="chart-toggle-opt" onclick="setUpperMode('monthly',this)">每月</button>
+          </div>
+        </div>
+        <div class="week-nav" id="statsWeekNav">
           <button onclick="statsWeekNav(-1)">‹</button>
           <div style="text-align:center">
             <div class="label" id="statsWeekTitle">本周</div>
@@ -262,13 +275,18 @@ main::-webkit-scrollbar{display:none}
         </div>
         <div class="chart-box">
           <canvas id="chartWeekly" height="220"></canvas>
-          <div class="chart-legend" id="legendWeekly"></div>
         </div>
-      </div><div class="stats-section">
-        <div class="section-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/></svg>每周各日平均工作时长</div>
+      </div>
+      <div class="stats-section">
+        <div class="chart-toggle">
+          <div class="chart-toggle-container" id="lowerToggle">
+            <button class="chart-toggle-opt active" onclick="setLowerMode('weekday',this)">每周各日</button>
+            <button class="chart-toggle-opt" onclick="setLowerMode('hourly',this)">每日各时段</button>
+          </div>
+        </div>
+        <div class="section-title" id="avgChartTitle"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/></svg>每周各日平均工作时长</div>
         <div class="chart-box">
           <canvas id="chartAvg" height="220"></canvas>
-          <div class="chart-legend" id="legendAvg"></div>
         </div>
       </div>
     </div>
@@ -367,7 +385,8 @@ function showPage(name,btn){
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   if(btn)btn.classList.add('active');if(name==='calendar')renderCalendar();
   if(name==='record')renderRecords();
-  if(name==='stats')renderStats();
+  if(name==='stats'){renderLegend();renderStats();}
+  if(name==='timer')updateTodayDurs();
 }
 
 /* ====== TIMER ====== */
@@ -449,6 +468,7 @@ function stopTimer(){
   document.getElementById('timerStatus').querySelector('.label').textContent='准备开始';
   document.getElementById('timerStarted').textContent='';
   saveTimerState();
+  updateTodayDurs();
   if(tooShort){toast('计时不足1分钟，未记录')}else{toast('记录已保存')}
 }
 
@@ -457,13 +477,34 @@ function updateTimerDisplay(){
   const elapsed=Date.now()-timerState.startTime.getTime();
   document.getElementById('timerDisplay').textContent=fmtDuration(elapsed);
   const lbl=document.getElementById('timerStatus').querySelector('.label');
-  lbl.textContent='正在记录: '+CAT_NAMES[timerState.category]+(timerState.project?' · '+timerState.project:'');document.getElementById('timerStarted').textContent='开始于'+fmtTime(timerState.startTime);
+  lbl.textContent='开始于 '+fmtTime(timerState.startTime)+(timerState.project?' · '+timerState.project:'');
+  document.getElementById('timerStarted').textContent='';
+  updateTodayDurs();
 }
 
 function updateTimerBtns(){
   document.querySelectorAll('.timer-btn').forEach(b=>{
     b.classList.remove('running');
     if(timerState.running&&b.dataset.cat===timerState.category)b.classList.add('running');
+  });
+}
+
+function getTodayCatDuration(cat){
+  const today=new Date();
+  const recs=loadRecords().filter(r=>sameDay(new Date(r.startTime),today)&&r.category===cat);
+  let ms=recs.reduce((a,r)=>a+new Date(r.endTime)-new Date(r.startTime),0);
+  if(timerState.running&&timerState.category===cat&&timerState.startTime){
+    ms+=Date.now()-timerState.startTime.getTime();
+  }
+  const h=Math.floor(ms/3600000);
+  const m=Math.floor((ms%3600000)/60000);
+  return pad(h)+':'+pad(m);
+}
+
+function updateTodayDurs(){
+  ['research','non-research','meeting'].forEach(cat=>{
+    const el=document.getElementById('dur-'+cat);
+    if(el)el.textContent=getTodayCatDuration(cat);
   });
 }
 
@@ -682,71 +723,86 @@ function importData(e){
 /* ====== STATS ====== */
 let statsMode='category';
 let statsWeekStart=getMonday(new Date());
+let activeKeys=new Set(['research','non-research','meeting']);
+let upperChartMode='daily';
+let lowerChartMode='weekday';
 
 function setStatsMode(mode,btn){
   statsMode=mode;
+  activeKeys=mode==='category'?new Set(['research','non-research','meeting']):new Set(['AB菌','水污染','Pattern','Crack','其他']);
   document.querySelectorAll('.toggle-opt').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
+  renderLegend();
   renderStats();
 }
-function statsWeekNav(dir){statsWeekStart=addDays(statsWeekStart,dir*7);renderStats()}
 
-function computeWeeklyGlobalMax(){
-  const recs=loadRecords();
-  const dayTotals={};
-  recs.forEach(r=>{
-    if(statsMode==='project'&&!r.project)return;
-    const d=fmtDate(new Date(r.startTime));
-    const ms=new Date(r.endTime)-new Date(r.startTime);
-    dayTotals[d]=(dayTotals[d]||0)+ms;
-  });
-  const vals=Object.values(dayTotals);
-  if(!vals.length)return 1;
-  return Math.ceil(Math.max(1,...vals.map(v=>v/3600000)));
+function setUpperMode(mode,btn){
+  upperChartMode=mode;
+  document.querySelectorAll('#upperToggle .chart-toggle-opt').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('statsWeekNav').style.display=mode==='daily'?'':' none';
+  renderWeeklyChart();
 }
 
-function renderStats(){
-  renderWeeklyChart();
+function setLowerMode(mode,btn){
+  lowerChartMode=mode;
+  document.querySelectorAll('#lowerToggle .chart-toggle-opt').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
   renderAvgChart();
 }
 
-function renderWeeklyChart(){
-  const today=new Date();
-  const end=addDays(statsWeekStart,6);
-  const isThisWeek=sameDay(getMonday(today),statsWeekStart);
-  document.getElementById('statsWeekTitle').textContent=isThisWeek?'本周每日工作时长':fmtDateShort(statsWeekStart)+' – '+fmtDateShort(end);
-  document.getElementById('statsWeekSub').textContent=statsWeekStart.getFullYear()+'年';
-
-  const recs=loadRecords();
-  const days=[];
-  for(let i=0;i<7;i++){
-    const d=addDays(statsWeekStart,i);
-    const dayRecs=recs.filter(r=>sameDay(new Date(r.startTime),d));
-    days.push(dayRecs);
-  }
-
-  const globalMax=computeWeeklyGlobalMax();
-  drawStackedBar('chartWeekly','legendWeekly',days,DAY_NAMES,undefined,globalMax);
+function renderLegend(){
+  const el=document.getElementById('statsLegend');
+  if(!el)return;
+  const keys=statsMode==='category'?['research','non-research','meeting']:['AB菌','水污染','Pattern','Crack','其他'];
+  const names=statsMode==='category'?keys.map(k=>CAT_NAMES[k]):keys;
+  const colorMap=statsMode==='category'?CAT_COLORS:PROJ_COLORS;
+  el.innerHTML=keys.map((k,i)=>{
+    const checked=activeKeys.has(k);
+    const c=colorMap[k];
+    const style=checked?`background:${c};border-color:${c};color:white`:`background:white;border-color:${c};color:${c}`;
+    return `<div class="legend-item" style="${style}" onclick="toggleLegendKey('${k}')">${names[i]}</div>`;
+  }).join('');
 }
 
-function renderAvgChart(){
-  const recs=loadRecords();
-  // Group by day of week (0=Mon..6=Sun)
-  const dayBuckets=Array.from({length:7},()=>[]);
-  const weeksSeen=new Set();
-  recs.forEach(r=>{
-    const s=new Date(r.startTime);
-    let dow=s.getDay()-1;if(dow<0)dow=6;
-    dayBuckets[dow].push(r);
-    weeksSeen.add(fmtDate(getMonday(s)));
-  });
-
-  const numWeeks=Math.max(1,weeksSeen.size);
-  // For average, we treat each day's records as a combined set and divide by numWeeks
-  drawStackedBar('chartAvg','legendAvg',dayBuckets,DAY_NAMES,numWeeks,undefined);
+function toggleLegendKey(k){
+  if(activeKeys.has(k)){if(activeKeys.size>1)activeKeys.delete(k);}
+  else activeKeys.add(k);
+  renderLegend();renderStats();
 }
 
-function drawStackedBar(canvasId,legendId,dayData,labels,divideBy,fixedYMax){
+function statsWeekNav(dir){statsWeekStart=addDays(statsWeekStart,dir*7);renderWeeklyChart();}
+
+/* --- helpers --- */
+function getKeysColors(){
+  const allKeys=statsMode==='category'?['research','non-research','meeting']:['AB菌','水污染','Pattern','Crack','其他'];
+  const colorMap=statsMode==='category'?CAT_COLORS:PROJ_COLORS;
+  const keys=allKeys.filter(k=>activeKeys.has(k));
+  return {keys,colors:keys.map(k=>colorMap[k])};
+}
+
+function computeBarValues(dayData,divideBy){
+  const {keys,colors}=getKeysColors();
+  return dayData.map(recs=>keys.map((k,i)=>{
+    let ms=0;
+    recs.forEach(r=>{
+      const match=statsMode==='category'?r.category===k:r.project===k;
+      if(match)ms+=new Date(r.endTime)-new Date(r.startTime);
+    });
+    let val=ms/3600000;
+    if(divideBy)val/=divideBy;
+    return{color:colors[i],val};
+  }));
+}
+
+function fmtYTick(v){
+  if(v===0)return'0h';
+  if(v===Math.floor(v))return v+'h';
+  if(v<1)return Math.round(v*60)+'m';
+  return v.toFixed(1)+'h';
+}
+
+function drawChart(canvasId,barValues,labels,fixedYMax,tickStep){
   const canvas=document.getElementById(canvasId);
   const ctx=canvas.getContext('2d');
   const dpr=window.devicePixelRatio||1;
@@ -756,66 +812,147 @@ function drawStackedBar(canvasId,legendId,dayData,labels,divideBy,fixedYMax){
   ctx.scale(dpr,dpr);
   const W=rect.width,H=220;
   ctx.clearRect(0,0,W,H);
+  const n=labels.length;
+  if(!n)return;
 
-  let keys,colors;
-  if(statsMode==='category'){
-    keys=['research','non-research','meeting'];
-    colors=[CAT_COLORS.research,CAT_COLORS['non-research'],CAT_COLORS.meeting];
-  }else{
-    keys=['AB菌','水污染','Pattern','Crack','其他'];
-    colors=[PROJ_COLORS['AB菌'],PROJ_COLORS['水污染'],PROJ_COLORS['Pattern'],PROJ_COLORS['Crack'],PROJ_COLORS['其他']];
-  }
-
-  // Compute stacks
-  const stacks=dayData.map(recs=>{
-    const vals=keys.map(k=>{
-      let ms=0;
-      recs.forEach(r=>{
-        const match=statsMode==='category'?(r.category===k):(r.project===k);
-        if(match)ms+=new Date(r.endTime)-new Date(r.startTime);
-      });
-      return ms/3600000;
-    });
-    if(divideBy)return vals.map(v=>v/divideBy);
-    return vals;
-  });
-
-  const dataMax=Math.max(0,...stacks.map(s=>s.reduce((a,b)=>a+b,0)));
-  const yMax=fixedYMax!==undefined?fixedYMax:Math.ceil(Math.max(1,dataMax));
+  const step=tickStep||1;
+  const dataMax=Math.max(0,...barValues.map(s=>s.reduce((a,b)=>a+b.val,0)));
+  const rawMax=fixedYMax!==undefined?fixedYMax:dataMax;
+  const yMax=Math.max(step,Math.ceil(rawMax/step)*step);
 
   const padL=36,padR=12,padT=16,padB=32;
   const chartW=W-padL-padR,chartH=H-padT-padB;
-  const barW=chartW/7*0.55;
-  const gap=chartW/7;
+  const gap=chartW/n;
+  const barW=Math.max(4,Math.min(gap*0.68,44));
 
-  // Y axis: 1h ticks
+  // Y axis grid + ticks
   ctx.strokeStyle='#E8E0D6';ctx.lineWidth=1;
   ctx.fillStyle='#B5AFA8';ctx.font='10px sans-serif';ctx.textAlign='right';
-  for(let i=0;i<=yMax;i++){
-    const y=padT+chartH-chartH*i/yMax;
+  for(let v=0;v<=yMax+step*0.001;v+=step){
+    const y=padT+chartH-chartH*(v/yMax);
     ctx.beginPath();ctx.moveTo(padL,y);ctx.lineTo(W-padR,y);ctx.stroke();
-    ctx.fillText(i+'h',padL-4,y+3);
+    ctx.fillText(fmtYTick(v),padL-4,y+3);
   }
 
-  // Bars
-  stacks.forEach((stack,di)=>{
+  // Bars + labels
+  const labelStep=Math.max(1,Math.ceil(n/14));
+  barValues.forEach((stack,di)=>{
     const x=padL+gap*di+(gap-barW)/2;
     let yBot=padT+chartH;
-    stack.forEach((val,ki)=>{
+    stack.forEach(({color,val})=>{
       if(val<=0)return;
-      const h=val/yMax*chartH;
-      ctx.fillStyle=colors[ki];
+      const h=(val/yMax)*chartH;
+      ctx.fillStyle=color;
       ctx.fillRect(x,yBot-h,barW,h);
       yBot-=h;
     });
-    ctx.fillStyle='#8B8580';ctx.font='11px sans-serif';ctx.textAlign='center';
-    ctx.fillText(labels[di],x+barW/2,H-8);
+    if(di%labelStep===0){
+      ctx.fillStyle='#8B8580';ctx.font='10px sans-serif';ctx.textAlign='center';
+      ctx.fillText(labels[di],x+barW/2,H-8);
+    }
   });
+}
 
-  // Legend
-  const legend=document.getElementById(legendId);
-  const displayNames=statsMode==='category'?keys.map(k=>CAT_NAMES[k]):keys;
-  legend.innerHTML=displayNames.map((n,i)=>`<div class="chart-legend-item"><div class="chart-legend-dot" style="background:${colors[i]}"></div>${n}</div>`).join('');
+/* --- Global max for daily mode --- */
+function computeWeeklyGlobalMax(){
+  const recs=loadRecords();
+  const dayTotals={};
+  recs.forEach(r=>{
+    const matchesActive=statsMode==='category'?activeKeys.has(r.category):(r.project&&activeKeys.has(r.project));
+    if(!matchesActive)return;
+    const d=fmtDate(new Date(r.startTime));
+    const ms=new Date(r.endTime)-new Date(r.startTime);
+    dayTotals[d]=(dayTotals[d]||0)+ms;
+  });
+  const vals=Object.values(dayTotals);
+  if(!vals.length)return 1;
+  return Math.ceil(Math.max(1,...vals.map(v=>v/3600000)));
+}
+
+function renderStats(){renderWeeklyChart();renderAvgChart();}
+
+/* ---- Upper chart ---- */
+function renderWeeklyChart(){
+  if(upperChartMode==='daily')renderDailyChart();
+  else if(upperChartMode==='weekly')renderAllWeeksChart();
+  else renderAllMonthsChart();
+}
+
+function renderDailyChart(){
+  const today=new Date();
+  const end=addDays(statsWeekStart,6);
+  const isThisWeek=sameDay(getMonday(today),statsWeekStart);
+  document.getElementById('statsWeekTitle').textContent=isThisWeek?'本周每日工作时长':fmtDateShort(statsWeekStart)+' – '+fmtDateShort(end);
+  document.getElementById('statsWeekSub').textContent=statsWeekStart.getFullYear()+'年';
+  const recs=loadRecords();
+  const days=[];
+  for(let i=0;i<7;i++){const d=addDays(statsWeekStart,i);days.push(recs.filter(r=>sameDay(new Date(r.startTime),d)));}
+  const globalMax=computeWeeklyGlobalMax();
+  drawChart('chartWeekly',computeBarValues(days,undefined),DAY_NAMES,globalMax,1);
+}
+
+function renderAllWeeksChart(){
+  document.getElementById('statsWeekTitle').textContent='每周累计工作时长';
+  document.getElementById('statsWeekSub').textContent='';
+  const recs=loadRecords();
+  const weekMap={};
+  recs.forEach(r=>{const wk=fmtDate(getMonday(new Date(r.startTime)));(weekMap[wk]=weekMap[wk]||[]).push(r);});
+  const weeks=Object.keys(weekMap).sort();
+  if(!weeks.length){drawChart('chartWeekly',[],[],undefined,1);return;}
+  const labels=weeks.map(w=>{const d=new Date(w);return fmtDateShort(d);});
+  drawChart('chartWeekly',computeBarValues(weeks.map(w=>weekMap[w]),undefined),labels,undefined,1);
+}
+
+function renderAllMonthsChart(){
+  document.getElementById('statsWeekTitle').textContent='每月累计工作时长';
+  document.getElementById('statsWeekSub').textContent='';
+  const recs=loadRecords();
+  const monthMap={};
+  recs.forEach(r=>{const s=new Date(r.startTime);const key=s.getFullYear()+'-'+pad(s.getMonth()+1);(monthMap[key]=monthMap[key]||[]).push(r);});
+  const months=Object.keys(monthMap).sort();
+  if(!months.length){drawChart('chartWeekly',[],[],undefined,1);return;}
+  const labels=months.map(m=>{const p=m.split('-');return parseInt(p[1])+'月';});
+  drawChart('chartWeekly',computeBarValues(months.map(m=>monthMap[m]),undefined),labels,undefined,1);
+}
+
+/* ---- Lower chart ---- */
+function renderAvgChart(){
+  if(lowerChartMode==='weekday')renderWeekdayAvgChart();
+  else renderHourlyAvgChart();
+}
+
+function renderWeekdayAvgChart(){
+  document.getElementById('avgChartTitle').innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/></svg>每周各日平均工作时长';
+  const recs=loadRecords();
+  const dayBuckets=Array.from({length:7},()=>[]);
+  const weeksSeen=new Set();
+  recs.forEach(r=>{const s=new Date(r.startTime);let dow=s.getDay()-1;if(dow<0)dow=6;dayBuckets[dow].push(r);weeksSeen.add(fmtDate(getMonday(s)));});
+  const numWeeks=Math.max(1,weeksSeen.size);
+  drawChart('chartAvg',computeBarValues(dayBuckets,numWeeks),DAY_NAMES,undefined,1);
+}
+
+function renderHourlyAvgChart(){
+  document.getElementById('avgChartTitle').innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/></svg>每日各时段平均工作时长';
+  const HOURS=Array.from({length:15},(_,i)=>i+9);
+  const labels=HOURS.map(h=>h+'h');
+  const recs=loadRecords();
+  const distinctDays=new Set(recs.map(r=>fmtDate(new Date(r.startTime))));
+  const numDays=Math.max(1,distinctDays.size);
+  const {keys,colors}=getKeysColors();
+  const barValues=HOURS.map(h=>keys.map((k,i)=>{
+    let ms=0;
+    recs.forEach(r=>{
+      const match=statsMode==='category'?r.category===k:r.project===k;
+      if(!match)return;
+      const s=new Date(r.startTime).getTime();
+      const e=new Date(r.endTime).getTime();
+      const recDay=new Date(r.startTime);
+      const hs=new Date(recDay.getFullYear(),recDay.getMonth(),recDay.getDate(),h,0,0).getTime();
+      ms+=Math.max(0,Math.min(e,hs+3600000)-Math.max(s,hs));
+    });
+    return{color:colors[i],val:ms/3600000/numDays};
+  }));
+  drawChart('chartAvg',barValues,labels,undefined,0.25);
 }
 
 function roundRect(ctx,x,y,w,h,r){
@@ -835,6 +972,8 @@ if('serviceWorker' in navigator){
 }
 
 /* ====== INIT ====== */
+updateTodayDurs();
+renderLegend();
 window.addEventListener('resize',()=>{
   const active=document.querySelector('.page.active');
   if(active.id==='page-calendar')renderCalendar();
