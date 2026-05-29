@@ -870,15 +870,6 @@ function roundRect(ctx,x,y,w,h,r){if(h<1)return;r=Math.min(r,h/2,w/2);ctx.beginP
 updateTimerBtns();updateTodayDurs();updateTodayTotal();
 /* Calendar & stats are lazy — only rendered when their tab is shown */
 
-/* ===== SEED DEMO ===== */
-(function seedDemo(){
-  const existing=loadRecords();if(existing.length)return;
-  const today=new Date();today.setHours(0,0,0,0);
-  const mk=(offsetDay,sh,sm,eh,em,cat,proj)=>{const s=new Date(today);s.setDate(s.getDate()-offsetDay);s.setHours(sh,sm);const e=new Date(s);e.setHours(eh,em);return{id:Date.now()+Math.random()*1e6|0,startTime:s.toISOString(),endTime:e.toISOString(),category:cat,project:proj||""}};
-  const demo=[mk(0,9,30,11,45,"research","AB菌"),mk(0,13,15,14,0,"meeting","Pattern"),mk(0,14,30,17,0,"research","AB菌"),mk(0,19,45,21,30,"non-research",""),mk(1,10,0,12,30,"research","水污染"),mk(1,14,0,15,30,"meeting","AB菌"),mk(1,15,45,18,0,"research","水污染"),mk(2,9,0,10,30,"non-research",""),mk(2,11,0,12,30,"research","Crack"),mk(2,14,0,17,30,"research","Crack"),mk(3,10,15,11,30,"meeting","Pattern"),mk(3,13,0,16,30,"research","Pattern"),mk(3,20,0,21,15,"non-research",""),mk(4,9,30,12,0,"research","AB菌"),mk(4,14,0,15,0,"meeting","其他"),mk(4,15,30,17,45,"research","AB菌"),mk(6,14,0,16,30,"research","水污染"),mk(7,10,0,11,45,"research","AB菌"),mk(7,14,0,16,0,"research","Crack"),mk(8,9,30,12,0,"research","Pattern"),mk(8,14,30,17,30,"research","Pattern"),mk(9,10,0,11,0,"meeting","AB菌"),mk(10,14,0,17,0,"non-research",""),mk(11,10,0,12,30,"research","水污染")];
-  saveRecords(demo);updateTodayDurs();updateTodayTotal();
-})();
-
 /* Resize handler */
 window.addEventListener("resize",()=>{const ap=document.querySelector('.page.active')?.id;if(ap==='page-calendar')renderCalendar();if(ap==='page-stats')renderStats()});
 
